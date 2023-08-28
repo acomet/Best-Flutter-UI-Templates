@@ -12,8 +12,7 @@ class HotelHomeScreen extends StatefulWidget {
   _HotelHomeScreenState createState() => _HotelHomeScreenState();
 }
 
-class _HotelHomeScreenState extends State<HotelHomeScreen>
-    with TickerProviderStateMixin {
+class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderStateMixin {
   AnimationController? animationController;
   List<HotelListData> hotelList = HotelListData.hotelList;
   final ScrollController _scrollController = ScrollController();
@@ -23,8 +22,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
 
   @override
   void initState() {
-    animationController = AnimationController(
-        duration: const Duration(milliseconds: 1000), vsync: this);
+    animationController = AnimationController(duration: const Duration(milliseconds: 1000), vsync: this);
     super.initState();
   }
 
@@ -47,12 +45,15 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
         child: Scaffold(
           body: Stack(
             children: <Widget>[
+
+              // 这里嵌套一层的意思是如果键盘弹出来之后，点击“InkWell”这一层会自动把键盘弹回去
               InkWell(
                 splashColor: Colors.transparent,
                 focusColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 hoverColor: Colors.transparent,
                 onTap: () {
+                  // 收起键盘
                   FocusScope.of(context).requestFocus(FocusNode());
                 },
                 child: Column(
@@ -65,8 +66,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
                             (BuildContext context, bool innerBoxIsScrolled) {
                           return <Widget>[
                             SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                                  (BuildContext context, int index) {
+                              delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
                                 return Column(
                                   children: <Widget>[
                                     getSearchBarUI(),
@@ -522,8 +522,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top, left: 8, right: 8),
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top, left: 8, right: 8),
         child: Row(
           children: <Widget>[
             Container(
@@ -607,8 +606,7 @@ class ContestTabHeader extends SliverPersistentHeaderDelegate {
   final Widget searchUI;
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return searchUI;
   }
 

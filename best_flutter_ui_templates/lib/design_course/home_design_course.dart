@@ -4,6 +4,7 @@ import 'package:best_flutter_ui_templates/design_course/popular_course_list_view
 import 'package:best_flutter_ui_templates/main.dart';
 import 'package:flutter/material.dart';
 import 'design_course_app_theme.dart';
+import '../utils/color_util.dart';
 
 class DesignCourseHomeScreen extends StatefulWidget {
   @override
@@ -105,7 +106,7 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
+          InkWell(child: Text(
             'Popular Course',
             textAlign: TextAlign.left,
             style: TextStyle(
@@ -114,7 +115,9 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
               letterSpacing: 0.27,
               color: DesignCourseAppTheme.darkerText,
             ),
-          ),
+          ),onTap:() {
+            test();
+          }),
           Flexible(
             child: PopularCourseListView(
               callBack: () {
@@ -127,8 +130,16 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
     );
   }
 
+  void test() {
+    // 导入了某个文件，就可以使用文件里所有的方法和类
+     var sport = new Sport();
+    sport.play("this is paly() 888");
+
+    dance();
+  }
+
   void moveTo() {
-    Navigator.push<dynamic>(
+      Navigator.push<dynamic>(
       context,
       MaterialPageRoute<dynamic>(
         builder: (BuildContext context) => CourseInfoScreen(),
@@ -148,9 +159,7 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-            color: isSelected
-                ? DesignCourseAppTheme.nearlyBlue
-                : DesignCourseAppTheme.nearlyWhite,
+            color: isSelected ? DesignCourseAppTheme.nearlyBlue : DesignCourseAppTheme.nearlyWhite,
             borderRadius: const BorderRadius.all(Radius.circular(24.0)),
             border: Border.all(color: DesignCourseAppTheme.nearlyBlue)),
         child: Material(
@@ -164,8 +173,7 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
               });
             },
             child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 12, bottom: 12, left: 18, right: 18),
+              padding: const EdgeInsets.only(top: 12, bottom: 12, left: 18, right: 18),
               child: Center(
                 child: Text(
                   txt,

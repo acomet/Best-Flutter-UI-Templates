@@ -1,6 +1,6 @@
 import 'package:best_flutter_ui_templates/design_course/design_course_app_theme.dart';
 import 'package:best_flutter_ui_templates/design_course/models/category.dart';
-import 'package:best_flutter_ui_templates/main.dart';
+import '../utils/color_util.dart';
 import 'package:flutter/material.dart';
 
 class PopularCourseListView extends StatefulWidget {

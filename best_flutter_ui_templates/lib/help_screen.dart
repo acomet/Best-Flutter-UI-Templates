@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 class HelpScreen extends StatefulWidget {
   @override
-  _HelpScreenState createState() => _HelpScreenState();
+  _HelpScreenState createState() {
+    return _HelpScreenState();
+  }
 }
 
 class _HelpScreenState extends State<HelpScreen> {
@@ -21,8 +23,7 @@ class _HelpScreenState extends State<HelpScreen> {
       child: SafeArea(
         top: false,
         child: Scaffold(
-          backgroundColor:
-              isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+          backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
           body: Column(
             children: <Widget>[
               Container(
@@ -33,7 +34,7 @@ class _HelpScreenState extends State<HelpScreen> {
                 child: Image.asset('assets/images/helpImage.png'),
               ),
               Container(
-                padding: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
                 child: Text(
                   'How can we help you?',
                   style: TextStyle(
@@ -45,10 +46,11 @@ class _HelpScreenState extends State<HelpScreen> {
               Container(
                 padding: const EdgeInsets.only(top: 16),
                 child: Text(
-                  'It looks like you are experiencing problems\nwith our sign up process. We are here to\nhelp so please get in touch with us',
+                  'It looks like\n you are experiencing problems\n with our sign up process. \nWe are here to help so please \nget in touch with us',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 16,
+                      fontStyle:FontStyle.italic,
                       color: isLightMode ? Colors.black : Colors.white),
                 ),
               ),

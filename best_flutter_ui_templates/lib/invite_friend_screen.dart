@@ -1,4 +1,5 @@
 import 'package:best_flutter_ui_templates/app_theme.dart';
+import 'package:best_flutter_ui_templates/utils/log_util.dart';
 import 'package:flutter/material.dart';
 
 class InviteFriend extends StatefulWidget {
@@ -7,9 +8,14 @@ class InviteFriend extends StatefulWidget {
 }
 
 class _InviteFriendState extends State<InviteFriend> {
+
   @override
   void initState() {
     super.initState();
+  }
+
+  void shareAction() {
+    logF("share your information ");
   }
 
   @override
@@ -45,11 +51,12 @@ class _InviteFriendState extends State<InviteFriend> {
               Container(
                 padding: const EdgeInsets.only(top: 16),
                 child: Text(
-                  'Are you one of those who makes everything\n at the last moment?',
+                  'Are you \none of those \nwho makes everything\n at the last moment?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
                     color: isLightMode ? Colors.black : Colors.white,
+                    fontStyle: FontStyle.italic,
                   ),
                 ),
               ),
@@ -59,25 +66,18 @@ class _InviteFriendState extends State<InviteFriend> {
                   child: Center(
                     child: Container(
                       width: 120,
-                      height: 40,
+                      height: 50,
+                      // 这个参数表明裁剪行为
+                      clipBehavior: Clip.antiAlias,
                       decoration: BoxDecoration(
                         color: isLightMode ? Colors.blue : Colors.white,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(4.0)),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: Colors.grey.withOpacity(0.6),
-                              offset: const Offset(4, 4),
-                              blurRadius: 8.0),
-                        ],
+                        borderRadius: const BorderRadius.all(Radius.circular(40.0)),
+                       
                       ),
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: () {
-                            //method here for functionality
-                            print('Share Action.');
-                          },
+                          onTap: () => shareAction(),
                           child: Center(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -85,9 +85,8 @@ class _InviteFriendState extends State<InviteFriend> {
                               children: <Widget>[
                                 Icon(
                                   Icons.share,
-                                  color:
-                                      isLightMode ? Colors.white : Colors.black,
-                                  size: 22,
+                                  color: isLightMode ? Colors.white : Colors.black,
+                                  size: 16,
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
@@ -95,9 +94,7 @@ class _InviteFriendState extends State<InviteFriend> {
                                     'Share',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      color: isLightMode
-                                          ? Colors.white
-                                          : Colors.black,
+                                      color: isLightMode ? Colors.white : Colors.black,
                                     ),
                                   ),
                                 ),

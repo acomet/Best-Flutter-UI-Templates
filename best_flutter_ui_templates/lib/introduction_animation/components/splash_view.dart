@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class SplashView extends StatefulWidget {
+
   final AnimationController animationController;
 
-  const SplashView({Key? key, required this.animationController})
-      : super(key: key);
+  const SplashView({Key? key, required this.animationController}) : super(key: key);
 
   @override
   _SplashViewState createState() => _SplashViewState();
@@ -13,9 +13,7 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
-    final _introductionanimation =
-        Tween<Offset>(begin: Offset(0, 0), end: Offset(0.0, -1.0))
-            .animate(CurvedAnimation(
+    final _introductionanimation = Tween<Offset>(begin: Offset(0, 0), end: Offset(0.0, -1.0)).animate(CurvedAnimation(
       parent: widget.animationController,
       curve: Interval(
         0.0,
@@ -40,6 +38,7 @@ class _SplashViewState extends State<SplashView> {
               child: Text(
                 "Clearhead",
                 style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+                
               ),
             ),
             Padding(
@@ -47,14 +46,14 @@ class _SplashViewState extends State<SplashView> {
               child: Text(
                 "Lorem ipsum dolor sit amet,consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore",
                 textAlign: TextAlign.center,
+                style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
             SizedBox(
               height: 48,
             ),
             Padding(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).padding.bottom + 16),
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 16),
               child: InkWell(
                 onTap: () {
                   widget.animationController.animateTo(0.2);

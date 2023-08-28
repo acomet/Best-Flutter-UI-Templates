@@ -1,6 +1,6 @@
 import 'package:best_flutter_ui_templates/design_course/design_course_app_theme.dart';
 import 'package:best_flutter_ui_templates/design_course/models/category.dart';
-import 'package:best_flutter_ui_templates/main.dart';
+import '../utils/color_util.dart';
 import 'package:flutter/material.dart';
 
 class CategoryListView extends StatefulWidget {
@@ -101,8 +101,7 @@ class CategoryView extends StatelessWidget {
         return FadeTransition(
           opacity: animation!,
           child: Transform(
-            transform: Matrix4.translationValues(
-                100 * (1.0 - animation!.value), 0.0, 0.0),
+            transform: Matrix4.translationValues(100 * (1.0 - animation!.value), 0.0, 0.0),
             child: InkWell(
               splashColor: Colors.transparent,
               onTap: callback,

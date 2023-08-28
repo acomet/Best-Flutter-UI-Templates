@@ -1,4 +1,5 @@
 import 'package:best_flutter_ui_templates/app_theme.dart';
+import 'package:best_flutter_ui_templates/utils/log_util.dart';
 import 'package:flutter/material.dart';
 
 class FeedbackScreen extends StatefulWidget {
@@ -21,8 +22,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       child: SafeArea(
         top: false,
         child: Scaffold(
-          backgroundColor:
-              isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+          backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
           body: SingleChildScrollView(
             child: SizedBox(
               height: MediaQuery.of(context).size.height,
@@ -64,8 +64,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         height: 40,
                         decoration: BoxDecoration(
                           color: isLightMode ? Colors.blue : Colors.white,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(4.0)),
+                          borderRadius: const BorderRadius.all(Radius.circular(4.0)),
                           boxShadow: <BoxShadow>[
                             BoxShadow(
                                 color: Colors.grey.withOpacity(0.6),
@@ -128,20 +127,20 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             constraints: const BoxConstraints(minHeight: 80, maxHeight: 160),
             color: AppTheme.white,
             child: SingleChildScrollView(
-              padding:
-                  const EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
               child: TextField(
                 maxLines: null,
-                onChanged: (String txt) {},
+                onChanged: (txt) {
+                    // print(txt);
+                    logF(txt);
+                },
                 style: TextStyle(
                   fontFamily: AppTheme.fontName,
                   fontSize: 16,
                   color: AppTheme.dark_grey,
                 ),
                 cursorColor: Colors.blue,
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Enter your feedback...'),
+                decoration: InputDecoration(border: InputBorder.none, hintText: 'Enter your feedback...'),
               ),
             ),
           ),

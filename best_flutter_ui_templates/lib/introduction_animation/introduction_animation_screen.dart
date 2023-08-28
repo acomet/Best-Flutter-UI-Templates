@@ -8,21 +8,21 @@ import 'package:best_flutter_ui_templates/introduction_animation/components/welc
 import 'package:flutter/material.dart';
 
 class IntroductionAnimationScreen extends StatefulWidget {
+
   const IntroductionAnimationScreen({Key? key}) : super(key: key);
 
   @override
-  _IntroductionAnimationScreenState createState() =>
-      _IntroductionAnimationScreenState();
+  _IntroductionAnimationScreenState createState() => _IntroductionAnimationScreenState();
+  
 }
 
-class _IntroductionAnimationScreenState
-    extends State<IntroductionAnimationScreen> with TickerProviderStateMixin {
+class _IntroductionAnimationScreenState extends State<IntroductionAnimationScreen> with TickerProviderStateMixin {
+
   AnimationController? _animationController;
 
   @override
   void initState() {
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 8));
+    _animationController = AnimationController(vsync: this, duration: Duration(seconds: 8));
     _animationController?.animateTo(0.0);
     super.initState();
   }
@@ -72,8 +72,7 @@ class _IntroductionAnimationScreenState
   }
 
   void _onSkipClick() {
-    _animationController?.animateTo(0.8,
-        duration: Duration(milliseconds: 1200));
+    _animationController?.animateTo(0.8, duration: Duration(milliseconds: 1200));
   }
 
   void _onBackClick() {
