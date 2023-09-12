@@ -1,9 +1,12 @@
+import 'package:best_flutter_ui_templates/hotel_booking/model/FilterKey.dart';
+import 'package:best_flutter_ui_templates/utils/log_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'range_slider_view.dart';
-import 'slider_view.dart';
+
 import 'hotel_app_theme.dart';
 import 'model/popular_filter_list.dart';
+import 'range_slider_view.dart';
+import 'slider_view.dart';
 
 class FiltersScreen extends StatefulWidget {
   @override
@@ -11,12 +14,10 @@ class FiltersScreen extends StatefulWidget {
 }
 
 class _FiltersScreenState extends State<FiltersScreen> {
-  List<PopularFilterListData> popularFilterListData =
-      PopularFilterListData.popularFList;
-  List<PopularFilterListData> accomodationListData =
-      PopularFilterListData.accomodationList;
+  List<PopularFilterListData> popularFilterListData = PopularFilterListData.popularFList;
+  List<PopularFilterListData> accomodationListData = PopularFilterListData.accomodationList;
 
-  RangeValues _values = const RangeValues(100, 600);
+  RangeValues _defaultRangeValue = const RangeValues(100, 600);
   double distValue = 50.0;
 
   @override
@@ -74,7 +75,27 @@ class _FiltersScreenState extends State<FiltersScreen> {
                     borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                     highlightColor: Colors.transparent,
                     onTap: () {
-                      Navigator.pop(context);
+                      // 把条件返回上一个页面
+
+                      // for (var popularFilter in popularFilterListData) {
+                      //   logF("popular titleTxt = ${popularFilter.titleTxt} and isSelected = ${popularFilter.isSelected}");
+                      // }
+                      //
+                      // for (var popularFilter in accomodationListData) {
+                      //   logF("accomodation = ${popularFilter.titleTxt} and isSelected = ${popularFilter.isSelected}");
+                      // }
+                      //
+                      // logF("range= $_defaultRangeValue");
+                      // logF("distValue=  $distValue");
+
+                      // var keys = FilterKey({popularFilterListData:popularFilterListData,accomodationListData:accomodationListData,range:_defaultRangeValue,dist:distValue});
+                      var keys = FilterKey(
+                          popularFilterListData: popularFilterListData,
+                          accomodationListData: accomodationListData,
+                          range: _defaultRangeValue,
+                          dist: distValue);
+
+                      Navigator.of(context).pop(keys);
                     },
                     child: Center(
                       child: Text(
@@ -187,8 +208,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
         });
       }
     } else {
-      accomodationListData[index].isSelected =
-          !accomodationListData[index].isSelected;
+      accomodationListData[index].isSelected = !accomodationListData[index].isSelected;
 
       int count = 0;
       for (int i = 0; i < accomodationListData.length; i++) {
@@ -256,11 +276,11 @@ class _FiltersScreenState extends State<FiltersScreen> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(right: 16, left: 16),
-          child: Column(
-            children: getPList(),
-          ),
-        ),
+            padding: const EdgeInsets.only(right: 16, left: 16),
+            // child: Column(
+            //   children: getPList(),
+            // ),
+            child: getPListNew()),
         const SizedBox(
           height: 8,
         )
@@ -272,9 +292,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
     final List<Widget> noList = <Widget>[];
     int count = 0;
     const int columnCount = 2;
-    for (int i = 0; i < popularFilterListData.length / columnCount; i++) {
+    for (int row = 0; row < popularFilterListData.length / columnCount; row++) {
       final List<Widget> listUI = <Widget>[];
-      for (int i = 0; i < columnCount; i++) {
+      for (int j = 0; j < columnCount; j++) {
         try {
           final PopularFilterListData date = popularFilterListData[count];
           listUI.add(Expanded(
@@ -287,6 +307,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                     onTap: () {
                       setState(() {
                         date.isSelected = !date.isSelected;
+                        popularFilterListData[count].isSelected =
+                            date.isSelected;
                       });
                     },
                     child: Padding(
@@ -334,6 +356,61 @@ class _FiltersScreenState extends State<FiltersScreen> {
     return noList;
   }
 
+  Widget getPListNew() {
+
+    return GridView(
+      // 有个奇怪的想象，不设置边距的话，会自带一个默认值
+      padding: EdgeInsets.only(top: 0),
+      physics: const BouncingScrollPhysics(),
+      // 方向
+      scrollDirection: Axis.vertical,
+      // Flutter-ListView嵌套高度问题，GridView 和 listview 必须要设置shrinkWrap: true,
+      shrinkWrap: true,
+      children: List<Widget>.generate(
+        popularFilterListData.length,
+            (int index) {
+          var date = popularFilterListData[index];
+          return Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+              onTap: () {
+                for (int j = 0; j < popularFilterListData.length; j++) {
+                  if (popularFilterListData[j].id == date.id) {
+                    setState(() {
+                      popularFilterListData[j].isSelected = !date.isSelected;
+                    });
+                  }
+                }
+              },
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    date.isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+                    color: date.isSelected ? HotelAppTheme.buildLightTheme().primaryColor : Colors.grey.withOpacity(0.6),
+                  ),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  Text(
+                    date.titleTxt,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+      // grid 的基本操作，可以定义横排，竖排数量、item之间的间隔、item的比例
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 12.0,
+        crossAxisSpacing: 12.0,
+        childAspectRatio: 5,
+      ),
+    );
+  }
+
   Widget priceBarFilter() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -351,9 +428,10 @@ class _FiltersScreenState extends State<FiltersScreen> {
           ),
         ),
         RangeSliderView(
-          values: _values,
+          values: _defaultRangeValue,
           onChangeRangeValues: (RangeValues values) {
-            _values = values;
+            _defaultRangeValue = values;
+            logF("what is range $_defaultRangeValue");
           },
         ),
         const SizedBox(

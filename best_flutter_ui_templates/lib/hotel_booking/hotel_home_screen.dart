@@ -1,6 +1,7 @@
 import 'package:best_flutter_ui_templates/hotel_booking/calendar_popup_view.dart';
 import 'package:best_flutter_ui_templates/hotel_booking/hotel_list_view.dart';
 import 'package:best_flutter_ui_templates/hotel_booking/model/hotel_list_data.dart';
+import 'package:best_flutter_ui_templates/utils/log_util.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -12,10 +13,11 @@ class HotelHomeScreen extends StatefulWidget {
   _HotelHomeScreenState createState() => _HotelHomeScreenState();
 }
 
-class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderStateMixin {
+class _HotelHomeScreenState extends State<HotelHomeScreen> with TickerProviderStateMixin {
   AnimationController? animationController;
   List<HotelListData> hotelList = HotelListData.hotelList;
   final ScrollController _scrollController = ScrollController();
+  bool likeThisHotel = false;
 
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 5));
@@ -45,7 +47,6 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
         child: Scaffold(
           body: Stack(
             children: <Widget>[
-
               // 这里嵌套一层的意思是如果键盘弹出来之后，点击“InkWell”这一层会自动把键盘弹回去
               InkWell(
                 splashColor: Colors.transparent,
@@ -61,12 +62,16 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
                     getAppBarUI(),
                     Expanded(
                       child: NestedScrollView(
+                        // 滚动监听
                         controller: _scrollController,
+
+                        // 折叠头部
                         headerSliverBuilder:
                             (BuildContext context, bool innerBoxIsScrolled) {
                           return <Widget>[
                             SliverList(
-                              delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+                              delegate:
+                                  SliverChildBuilderDelegate((context, index) {
                                 return Column(
                                   children: <Widget>[
                                     getSearchBarUI(),
@@ -76,24 +81,25 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
                               }, childCount: 1),
                             ),
                             SliverPersistentHeader(
+                              // 当此值为true时 SliverAppBar向上滚动一定程度时，会固定在页面顶部
+                              // 当此值为fase时 ，SliverAppBar会一直被推上去
                               pinned: true,
-                              floating: true,
+                              floating: false,
                               delegate: ContestTabHeader(
                                 getFilterBarUI(),
                               ),
                             ),
                           ];
                         },
+
                         body: Container(
-                          color:
-                              HotelAppTheme.buildLightTheme().backgroundColor,
+                          color: HotelAppTheme.buildLightTheme().backgroundColor,
                           child: ListView.builder(
                             itemCount: hotelList.length,
                             padding: const EdgeInsets.only(top: 8),
                             scrollDirection: Axis.vertical,
-                            itemBuilder: (BuildContext context, int index) {
-                              final int count =
-                                  hotelList.length > 10 ? 10 : hotelList.length;
+                            itemBuilder: (context, index) {
+                              final int count =  hotelList.length > 10 ? 10 : hotelList.length;
                               final Animation<double> animation =
                                   Tween<double>(begin: 0.0, end: 1.0).animate(
                                       CurvedAnimation(
@@ -103,7 +109,19 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
                                               curve: Curves.fastOutSlowIn)));
                               animationController?.forward();
                               return HotelListView(
-                                callback: () {},
+                                callback: () {
+                                  logF("点击了整个hotel");
+                                  setState(() {});
+                                },
+                                // 这里有个需要注意的，使用箭头函数之后，不可以使用 setState(() {});
+                                // likeCallBack: () => {
+                                //
+                                // },
+                                likeCallBack: (){
+                                  setState(() {
+                                    hotelList[index].like = !hotelList[index].like;
+                                  });
+                                },
                                 hotelData: hotelList[index],
                                 animation: animation,
                                 animationController: animationController!,
@@ -207,59 +225,55 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
       child: Row(
         children: <Widget>[
           Expanded(
-            child: Row(
-              children: <Widget>[
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    focusColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    splashColor: Colors.grey.withOpacity(0.2),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(4.0),
-                    ),
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      // setState(() {
-                      //   isDatePopupOpen = true;
-                      // });
-                      showDemoDialog(context: context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8, right: 8, top: 4, bottom: 4),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Choose date',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w100,
-                                fontSize: 16,
-                                color: Colors.grey.withOpacity(0.8)),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            '${DateFormat("dd, MMM").format(startDate)} - ${DateFormat("dd, MMM").format(endDate)}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w100,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                focusColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                splashColor: Colors.grey.withOpacity(0.2),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(4.0),
+                ),
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  // setState(() {
+                  //   isDatePopupOpen = true;
+                  // });
+                  showDemoDialog(context: context);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 8, right: 8, top: 4, bottom: 4),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Choose date',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w100,
+                            fontSize: 16,
+                            color: Colors.grey.withOpacity(0.8)),
                       ),
-                    ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        '${DateFormat("dd, MMM").format(startDate)} - ${DateFormat("dd, MMM").format(endDate)}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w100,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.only(right: 8, left: 8),
             child: Container(
               width: 1,
               height: 42,
@@ -319,6 +333,10 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
     );
   }
 
+  void _onSearchChange(String value) {
+    logF("search input change $value");
+  }
+
   Widget getSearchBarUI() {
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
@@ -337,16 +355,16 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
                     BoxShadow(
                         color: Colors.grey.withOpacity(0.2),
                         offset: const Offset(0, 2),
-                        blurRadius: 8.0),
+                        blurRadius: 2.0),
                   ],
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(
                       left: 16, right: 16, top: 4, bottom: 4),
                   child: TextField(
-                    onChanged: (String txt) {},
+                    onChanged: _onSearchChange,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                     ),
                     cursorColor: HotelAppTheme.buildLightTheme().primaryColor,
                     decoration: InputDecoration(
@@ -378,6 +396,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
                   Radius.circular(32.0),
                 ),
                 onTap: () {
+                  // 收回键盘
                   FocusScope.of(context).requestFocus(FocusNode());
                 },
                 child: Padding(
@@ -417,8 +436,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
         Container(
           color: HotelAppTheme.buildLightTheme().backgroundColor,
           child: Padding(
-            padding:
-                const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 4),
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 4),
             child: Row(
               children: <Widget>[
                 Expanded(
@@ -445,12 +463,18 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
                     ),
                     onTap: () {
                       FocusScope.of(context).requestFocus(FocusNode());
-                      Navigator.push<dynamic>(
+                      Navigator.push(
                         context,
-                        MaterialPageRoute<dynamic>(
+                        MaterialPageRoute(
                             builder: (BuildContext context) => FiltersScreen(),
+                            // 全屏的对话框形式，这里如果设置true，则会从底部弹出来
                             fullscreenDialog: true),
-                      );
+                      ).then((keys) => {
+                        // 返回的过滤参数是
+                          if(keys != null){
+                            logF("过滤的参数是  ${keys.toString()}")
+                          }
+                      });
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8),
@@ -510,6 +534,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
     );
   }
 
+  // 头部AppBar，包括信号栏
   Widget getAppBarUI() {
     return Container(
       decoration: BoxDecoration(
@@ -522,6 +547,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
         ],
       ),
       child: Padding(
+        // MediaQuery.of(context).padding.top 就是信息栏高度
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top, left: 8, right: 8),
         child: Row(
           children: <Widget>[
@@ -529,11 +555,13 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
               alignment: Alignment.centerLeft,
               width: AppBar().preferredSize.height + 40,
               height: AppBar().preferredSize.height,
+
+              // InkWell 包一层 Material 实现水波纹效果
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
                   borderRadius: const BorderRadius.all(
-                    Radius.circular(32.0),
+                    Radius.circular(200.0),
                   ),
                   onTap: () {
                     Navigator.pop(context);
@@ -557,6 +585,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
               ),
             ),
             Container(
+              // 这里可以不写，自适应可能更合理
               width: AppBar().preferredSize.height + 40,
               height: AppBar().preferredSize.height,
               child: Row(
@@ -569,10 +598,15 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
                       borderRadius: const BorderRadius.all(
                         Radius.circular(32.0),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        logF("click like");
+                        setState(() {
+                          likeThisHotel = !likeThisHotel;
+                        });
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.favorite_border),
+                        child: Icon(likeThisHotel ? Icons.favorite:Icons.favorite_border, color: HotelAppTheme.buildLightTheme().primaryColor),
                       ),
                     ),
                   ),
@@ -582,7 +616,9 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>  with TickerProviderS
                       borderRadius: const BorderRadius.all(
                         Radius.circular(32.0),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        logF("click map");
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Icon(FontAwesomeIcons.locationDot),
@@ -606,7 +642,8 @@ class ContestTabHeader extends SliverPersistentHeaderDelegate {
   final Widget searchUI;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return searchUI;
   }
 

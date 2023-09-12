@@ -4,6 +4,7 @@ import 'model/homelist.dart';
 import 'custom/loading.dart';
 
 class MyHomePage extends StatefulWidget {
+  static String routeName = "MyHomePage";
 
   const MyHomePage({Key? key}) : super(key: key);
 
@@ -36,10 +37,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         homeList.length,
         (int index) {
           final int count = homeList.length;
-          final Animation<double> animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+          final Animation<double> animation =
+              Tween<double>(begin: 0.0, end: 1.0).animate(
             CurvedAnimation(
               parent: animationController!,
-              curve: Interval((1 / count) * index, 1.0, curve: Curves.fastOutSlowIn),
+              curve: Interval((1 / count) * index, 1.0,
+                  curve: Curves.fastOutSlowIn),
             ),
           );
           animationController?.forward();
@@ -48,11 +51,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             animationController: animationController,
             listData: homeList[index],
             callBack: () {
+              // 也可以这样打开(命名路由ModalRoute.of(context).settings)
+              // Navigator.pushNamed(context, "this is route name");
+
               Navigator.push<dynamic>(
                 context,
                 MaterialPageRoute<dynamic>(
-                  builder: (BuildContext context) =>
-                      homeList[index].navigateScreen!,
+                  builder: (context) => homeList[index].navigateScreen!,
                 ),
               );
             },
@@ -80,7 +85,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isLightMode = brightness == Brightness.light;
     return Scaffold(
-      backgroundColor: isLightMode == true ? AppTheme.white : AppTheme.nearlyBlack,
+      backgroundColor:
+          isLightMode == true ? AppTheme.white : AppTheme.nearlyBlack,
       body: Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Column(
@@ -146,7 +152,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  borderRadius:BorderRadius.circular(AppBar().preferredSize.height),
+                  borderRadius:
+                      BorderRadius.circular(AppBar().preferredSize.height),
                   child: Icon(
                     multiple ? Icons.dashboard : Icons.view_agenda,
                     color: isLightMode ? AppTheme.dark_grey : AppTheme.white,
@@ -188,7 +195,8 @@ class HomeListView extends StatelessWidget {
         return FadeTransition(
           opacity: animation!,
           child: Transform(
-            transform: Matrix4.translationValues(0.0, 50 * (1.0 - animation!.value), 0.0),
+            transform: Matrix4.translationValues(
+                0.0, 50 * (1.0 - animation!.value), 0.0),
             child: AspectRatio(
               aspectRatio: 1.5,
               child: ClipRRect(
@@ -210,6 +218,19 @@ class HomeListView extends StatelessWidget {
                         onTap: callBack,
                       ),
                     ),
+                    Container(
+                        padding: EdgeInsets.fromLTRB(10, 6, 10, 6),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Colors.blue,
+                        ),
+                        child: Text(
+                          listData!.title,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        )),
                   ],
                 ),
               ),
@@ -220,5 +241,3 @@ class HomeListView extends StatelessWidget {
     );
   }
 }
-
-
