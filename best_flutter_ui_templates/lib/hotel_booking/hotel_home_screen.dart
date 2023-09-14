@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'filters_screen.dart';
 import 'hotel_app_theme.dart';
+import 'model/FilterKey.dart';
 
 class HotelHomeScreen extends StatefulWidget {
   @override
@@ -15,9 +16,13 @@ class HotelHomeScreen extends StatefulWidget {
 
 class _HotelHomeScreenState extends State<HotelHomeScreen> with TickerProviderStateMixin {
   AnimationController? animationController;
+  List<HotelListData> originHotelList = HotelListData.hotelList;
   List<HotelListData> hotelList = HotelListData.hotelList;
+  var count;
+
   final ScrollController _scrollController = ScrollController();
   bool likeThisHotel = false;
+  var searchKey = "";
 
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 5));
@@ -25,6 +30,8 @@ class _HotelHomeScreenState extends State<HotelHomeScreen> with TickerProviderSt
   @override
   void initState() {
     animationController = AnimationController(duration: const Duration(milliseconds: 1000), vsync: this);
+    count = originHotelList.length;
+
     super.initState();
   }
 
@@ -37,6 +44,87 @@ class _HotelHomeScreenState extends State<HotelHomeScreen> with TickerProviderSt
   void dispose() {
     animationController?.dispose();
     super.dispose();
+  }
+
+  ///
+  /// 过滤
+  ///
+  filterHotel(FilterKey keys) {
+    // list的复制
+    var result = List<HotelListData>.from(originHotelList);
+
+    var priceRange = keys.range;
+    var distance = keys.dist;
+    var popularFilterListData = keys.popularFilterListData;
+    var accomodationListData = keys.accomodationListData;
+
+    if (priceRange != null) {
+      result = result.where((element) {
+        logF("price is ${element.perNight}");
+        return priceRange.start <= element.perNight &&
+            element.perNight <= priceRange.end;
+      }).toList();
+    }
+
+    if (distance != null) {
+      result = result.where((element) {
+        return element.dist <= distance;
+      }).toList();
+    }
+
+    if (accomodationListData != null) {
+      var all = accomodationListData.any((element) {
+        return element.titleTxt == "All" && element.isSelected;
+      });
+
+      // 需要过滤
+      if (!all) {
+        var conditions = accomodationListData
+            .where((element) => element.isSelected)
+            .map((e) => e.titleTxt);
+        result.removeWhere((element) {
+          return !conditions.contains(element.accomodationType);
+        });
+      }
+    }
+
+    if (popularFilterListData != null) {
+      var conditions = popularFilterListData
+          .where((element) => element.isSelected)
+          .map((e) => e.titleTxt);
+      result.removeWhere((element) {
+        return !conditions.contains(element.popular);
+      });
+    }
+
+    setState(() {
+      hotelList = result;
+      count = result.length;
+      logF("what is count $count");
+    });
+  }
+
+  ///
+  /// 搜索
+  ///
+  _searchHotel() {
+    var result = List<HotelListData>.from(originHotelList);
+    // 全部
+    if (searchKey.isEmpty) {
+      setState(() {
+        hotelList = result;
+      });
+      return;
+    }
+
+    var searchResult = result.where((element) {
+      // 不区分大小写
+      return element.titleTxt.contains(RegExp(searchKey, caseSensitive: false));
+    }).toList();
+
+    setState(() {
+      hotelList = searchResult;
+    });
   }
 
   @override
@@ -76,6 +164,8 @@ class _HotelHomeScreenState extends State<HotelHomeScreen> with TickerProviderSt
                                   children: <Widget>[
                                     getSearchBarUI(),
                                     getTimeDateUI(),
+
+                                    // getFilterBarUI(count),
                                   ],
                                 );
                               }, childCount: 1),
@@ -86,9 +176,11 @@ class _HotelHomeScreenState extends State<HotelHomeScreen> with TickerProviderSt
                               pinned: true,
                               floating: false,
                               delegate: ContestTabHeader(
-                                getFilterBarUI(),
+                                getFilterBarUI(count),
+                                // FilterBar(count),
                               ),
                             ),
+                            // getFilterBarUI(count)
                           ];
                         },
 
@@ -111,7 +203,6 @@ class _HotelHomeScreenState extends State<HotelHomeScreen> with TickerProviderSt
                               return HotelListView(
                                 callback: () {
                                   logF("点击了整个hotel");
-                                  setState(() {});
                                 },
                                 // 这里有个需要注意的，使用箭头函数之后，不可以使用 setState(() {});
                                 // likeCallBack: () => {
@@ -166,8 +257,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen> with TickerProviderSt
                     itemCount: hotelList.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      final int count =
-                          hotelList.length > 10 ? 10 : hotelList.length;
+                      final int count = hotelList.length > 10 ? 10 : hotelList.length;
                       final Animation<double> animation =
                           Tween<double>(begin: 0.0, end: 1.0).animate(
                               CurvedAnimation(
@@ -334,7 +424,9 @@ class _HotelHomeScreenState extends State<HotelHomeScreen> with TickerProviderSt
   }
 
   void _onSearchChange(String value) {
-    logF("search input change $value");
+    setState(() {
+      searchKey = value;
+    });
   }
 
   Widget getSearchBarUI() {
@@ -398,6 +490,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen> with TickerProviderSt
                 onTap: () {
                   // 收回键盘
                   FocusScope.of(context).requestFocus(FocusNode());
+                  _searchHotel();
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -413,7 +506,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen> with TickerProviderSt
     );
   }
 
-  Widget getFilterBarUI() {
+  Widget getFilterBarUI(int count) {
     return Stack(
       children: <Widget>[
         Positioned(
@@ -436,14 +529,16 @@ class _HotelHomeScreenState extends State<HotelHomeScreen> with TickerProviderSt
         Container(
           color: HotelAppTheme.buildLightTheme().backgroundColor,
           child: Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 4),
+            padding:
+            const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 4),
             child: Row(
               children: <Widget>[
                 Expanded(
+                  // child: FilterCountBar(count.toString()),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      '530 hotels found',
+                      '$count hotels found',
                       style: TextStyle(
                         fontWeight: FontWeight.w100,
                         fontSize: 16,
@@ -471,8 +566,10 @@ class _HotelHomeScreenState extends State<HotelHomeScreen> with TickerProviderSt
                             fullscreenDialog: true),
                       ).then((keys) => {
                         // 返回的过滤参数是
-                          if(keys != null){
-                            logF("过滤的参数是  ${keys.toString()}")
+                        if (keys != null)
+                          {
+                            logF("过滤的参数是  ${keys.toString()}"),
+                            filterHotel(keys as FilterKey),
                           }
                       });
                     },
@@ -639,6 +736,7 @@ class ContestTabHeader extends SliverPersistentHeaderDelegate {
   ContestTabHeader(
     this.searchUI,
   );
+
   final Widget searchUI;
 
   @override
@@ -656,5 +754,25 @@ class ContestTabHeader extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
     return false;
+  }
+}
+
+class FilterCountBar extends StatelessWidget {
+  final String count;
+
+  FilterCountBar(this.count);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        '$count hotels found',
+        style: TextStyle(
+          fontWeight: FontWeight.w100,
+          fontSize: 16,
+        ),
+      ),
+    );
   }
 }

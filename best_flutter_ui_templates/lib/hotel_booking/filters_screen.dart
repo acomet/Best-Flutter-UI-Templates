@@ -17,7 +17,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
   List<PopularFilterListData> popularFilterListData = PopularFilterListData.popularFList;
   List<PopularFilterListData> accomodationListData = PopularFilterListData.accomodationList;
 
-  RangeValues _defaultRangeValue = const RangeValues(100, 600);
+  RangeValues _defaultRangeValue = const RangeValues(0, 500);
   double distValue = 50.0;
 
   @override
@@ -76,24 +76,11 @@ class _FiltersScreenState extends State<FiltersScreen> {
                     highlightColor: Colors.transparent,
                     onTap: () {
                       // 把条件返回上一个页面
-
-                      // for (var popularFilter in popularFilterListData) {
-                      //   logF("popular titleTxt = ${popularFilter.titleTxt} and isSelected = ${popularFilter.isSelected}");
-                      // }
-                      //
-                      // for (var popularFilter in accomodationListData) {
-                      //   logF("accomodation = ${popularFilter.titleTxt} and isSelected = ${popularFilter.isSelected}");
-                      // }
-                      //
-                      // logF("range= $_defaultRangeValue");
-                      // logF("distValue=  $distValue");
-
-                      // var keys = FilterKey({popularFilterListData:popularFilterListData,accomodationListData:accomodationListData,range:_defaultRangeValue,dist:distValue});
                       var keys = FilterKey(
                           popularFilterListData: popularFilterListData,
                           accomodationListData: accomodationListData,
                           range: _defaultRangeValue,
-                          dist: distValue);
+                          dist: distValue / 10);
 
                       Navigator.of(context).pop(keys);
                     },
