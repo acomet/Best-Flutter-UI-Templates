@@ -3,6 +3,7 @@ import 'package:best_flutter_ui_templates/design_course/course_info_screen.dart'
 import 'package:best_flutter_ui_templates/design_course/popular_course_list_view.dart';
 import 'package:best_flutter_ui_templates/main.dart';
 import 'package:flutter/material.dart';
+import '../app_theme.dart';
 import 'design_course_app_theme.dart';
 import '../utils/color_util.dart';
 
@@ -203,7 +204,7 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            width: MediaQuery.of(context).size.width * 0.75,
+            width: MediaQuery.of(context).size.width -36,
             height: 64,
             child: Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
@@ -301,10 +302,13 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
             ),
           ),
           Container(
-            width: 60,
-            height: 60,
-            child: Image.asset('assets/design_course/userImage.png'),
-          )
+            width: 30,
+            height: 30,
+            child: ClipOval(
+              child:
+                  Image.asset(fit: BoxFit.cover, 'assets/images/debicki.jpg'),
+            ),
+          ),
         ],
       ),
     );

@@ -18,12 +18,12 @@ class HomeList {
 
   static List<HomeList> homeList = [
     HomeList(
-      imagePath: 'assets/introduction_animation/introduction_animation.png',
+      imagePath: 'assets/introduction_animation/mood_dairy_image.png',
       navigateScreen: IntroductionAnimationScreen(),
       title: '引导页',
     ),
     HomeList(
-      imagePath: 'assets/hotel/hotel_booking.png',
+      imagePath: 'assets/hotel/hotel_1.png',
       navigateScreen: HotelHomeScreen(),
        title: '酒店管理',
     ),
@@ -33,7 +33,7 @@ class HomeList {
        title: '健身',
     ),
     HomeList(
-      imagePath: 'assets/design_course/design_course.png',
+      imagePath: 'assets/design_course/webInterFace.png',
       navigateScreen: DesignCourseHomeScreen(),
        title: 'Design',
     ),

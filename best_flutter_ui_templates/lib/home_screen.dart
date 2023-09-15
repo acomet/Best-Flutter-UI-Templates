@@ -85,8 +85,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isLightMode = brightness == Brightness.light;
     return Scaffold(
-      backgroundColor:
-          isLightMode == true ? AppTheme.white : AppTheme.nearlyBlack,
+      backgroundColor: isLightMode == true ? AppTheme.white : AppTheme.nearlyBlack,
       body: Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Column(
@@ -218,19 +217,19 @@ class HomeListView extends StatelessWidget {
                         onTap: callBack,
                       ),
                     ),
-                    Container(
-                        padding: EdgeInsets.fromLTRB(10, 6, 10, 6),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: Colors.blue,
-                        ),
-                        child: Text(
-                          listData!.title,
-                          maxLines: 1,
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        )),
+                    // Container(
+                    //     padding: EdgeInsets.fromLTRB(10, 6, 10, 6),
+                    //     decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.circular(100),
+                    //       color: Colors.blue,
+                    //     ),
+                    //     child: Text(
+                    //       listData!.title,
+                    //       maxLines: 1,
+                    //       style: TextStyle(
+                    //         color: Colors.white,
+                    //       ),
+                    //     )),
                   ],
                 ),
               ),

@@ -2,8 +2,7 @@ import 'package:best_flutter_ui_templates/hotel_booking/hotel_app_theme.dart';
 import 'package:flutter/material.dart';
 
 class RangeSliderView extends StatefulWidget {
-  const RangeSliderView({Key? key, this.values, this.onChangeRangeValues})
-      : super(key: key);
+  const RangeSliderView({Key? key, this.values, this.onChangeRangeValues}) : super(key: key);
 
   final Function(RangeValues)? onChangeRangeValues;
   final RangeValues? values;
@@ -75,10 +74,10 @@ class _RangeSliderViewState extends State<RangeSliderView> {
             child: RangeSlider(
               values: _values!,
               min: 0.0,
-              max: 1000.0,
+              max: 10000.0,
               activeColor: HotelAppTheme.buildLightTheme().primaryColor,
               inactiveColor: Colors.grey.withOpacity(0.4),
-              divisions: 1000,
+              divisions: 10000,
               onChanged: (RangeValues values) {
                 try {
                   setState(() {

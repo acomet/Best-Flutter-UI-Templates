@@ -14,11 +14,35 @@ class FiltersScreen extends StatefulWidget {
 }
 
 class _FiltersScreenState extends State<FiltersScreen> {
-  List<PopularFilterListData> popularFilterListData = PopularFilterListData.popularFList;
-  List<PopularFilterListData> accomodationListData = PopularFilterListData.accomodationList;
+  List<PopularFilterListData> originalPopularFilterListData = PopularFilterListData.popularFList;
+  List<PopularFilterListData> originalAccomodationListData = PopularFilterListData.accomodationList;
 
-  RangeValues _defaultRangeValue = const RangeValues(0, 500);
+  /// 空数组写法 1
+  List<PopularFilterListData> filterPopularFilterListData = [];
+
+  /// 空数组写法 2
+  var filterAccomodationListData = List<PopularFilterListData>.empty(growable: true);
+
+  RangeValues _defaultRangeValue = const RangeValues(0, 5000);
   double distValue = 50.0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    for(var item in originalPopularFilterListData){
+      /// 这样会导致元数据被修改
+      // filterPopularFilterListData.add(item);
+
+      var newItem = PopularFilterListData(item.id, titleTxt: item.titleTxt, isSelected: item.isSelected);
+      filterPopularFilterListData.add(newItem);
+    }
+
+    for(var item in originalAccomodationListData){
+      var newItem = PopularFilterListData(item.id, titleTxt: item.titleTxt, isSelected: item.isSelected);
+      filterAccomodationListData.add(newItem);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +101,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                     onTap: () {
                       // 把条件返回上一个页面
                       var keys = FilterKey(
-                          popularFilterListData: popularFilterListData,
-                          accomodationListData: accomodationListData,
+                          popularFilterListData: filterPopularFilterListData,
+                          accomodationListData: filterAccomodationListData,
                           range: _defaultRangeValue,
                           dist: distValue / 10);
 
@@ -135,8 +159,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
   List<Widget> getAccomodationListUI() {
     final List<Widget> noList = <Widget>[];
-    for (int i = 0; i < accomodationListData.length; i++) {
-      final PopularFilterListData date = accomodationListData[i];
+    for (int i = 0; i < filterAccomodationListData.length; i++) {
+      final PopularFilterListData date = filterAccomodationListData[i];
       noList.add(
         Material(
           color: Colors.transparent,
@@ -185,32 +209,32 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
   void checkAppPosition(int index) {
     if (index == 0) {
-      if (accomodationListData[0].isSelected) {
-        accomodationListData.forEach((d) {
+      if (filterAccomodationListData[0].isSelected) {
+        filterAccomodationListData.forEach((d) {
           d.isSelected = false;
         });
       } else {
-        accomodationListData.forEach((d) {
+        filterAccomodationListData.forEach((d) {
           d.isSelected = true;
         });
       }
     } else {
-      accomodationListData[index].isSelected = !accomodationListData[index].isSelected;
+      filterAccomodationListData[index].isSelected = !filterAccomodationListData[index].isSelected;
 
       int count = 0;
-      for (int i = 0; i < accomodationListData.length; i++) {
+      for (int i = 0; i < filterAccomodationListData.length; i++) {
         if (i != 0) {
-          final PopularFilterListData data = accomodationListData[i];
+          final PopularFilterListData data = filterAccomodationListData[i];
           if (data.isSelected) {
             count += 1;
           }
         }
       }
 
-      if (count == accomodationListData.length - 1) {
-        accomodationListData[0].isSelected = true;
+      if (count == filterAccomodationListData.length - 1) {
+        filterAccomodationListData[0].isSelected = true;
       } else {
-        accomodationListData[0].isSelected = false;
+        filterAccomodationListData[0].isSelected = false;
       }
     }
   }
@@ -279,11 +303,11 @@ class _FiltersScreenState extends State<FiltersScreen> {
     final List<Widget> noList = <Widget>[];
     int count = 0;
     const int columnCount = 2;
-    for (int row = 0; row < popularFilterListData.length / columnCount; row++) {
+    for (int row = 0; row < filterPopularFilterListData.length / columnCount; row++) {
       final List<Widget> listUI = <Widget>[];
       for (int j = 0; j < columnCount; j++) {
         try {
-          final PopularFilterListData date = popularFilterListData[count];
+          final PopularFilterListData date = filterPopularFilterListData[count];
           listUI.add(Expanded(
             child: Row(
               children: <Widget>[
@@ -294,7 +318,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                     onTap: () {
                       setState(() {
                         date.isSelected = !date.isSelected;
-                        popularFilterListData[count].isSelected =
+                        filterPopularFilterListData[count].isSelected =
                             date.isSelected;
                       });
                     },
@@ -324,7 +348,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
               ],
             ),
           ));
-          if (count < popularFilterListData.length - 1) {
+          if (count < filterPopularFilterListData.length - 1) {
             count += 1;
           } else {
             break;
@@ -343,6 +367,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
     return noList;
   }
 
+  ///
+  /// 条件
+  ///
   Widget getPListNew() {
 
     return GridView(
@@ -354,18 +381,19 @@ class _FiltersScreenState extends State<FiltersScreen> {
       // Flutter-ListView嵌套高度问题，GridView 和 listview 必须要设置shrinkWrap: true,
       shrinkWrap: true,
       children: List<Widget>.generate(
-        popularFilterListData.length,
+        filterPopularFilterListData.length,
             (int index) {
-          var date = popularFilterListData[index];
+          var date = filterPopularFilterListData[index];
           return Material(
             color: Colors.transparent,
             child: InkWell(
               borderRadius: const BorderRadius.all(Radius.circular(4.0)),
               onTap: () {
-                for (int j = 0; j < popularFilterListData.length; j++) {
-                  if (popularFilterListData[j].id == date.id) {
+                for (int j = 0; j < filterPopularFilterListData.length; j++) {
+                  if (filterPopularFilterListData[j].id == date.id) {
                     setState(() {
-                      popularFilterListData[j].isSelected = !date.isSelected;
+                      /// 这样写会影响到原始数据
+                      filterPopularFilterListData[j].isSelected = !date.isSelected;
                     });
                   }
                 }

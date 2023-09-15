@@ -50,7 +50,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen> with TickerProviderSt
   /// 过滤
   ///
   filterHotel(FilterKey keys) {
-    // list的复制
+    // list的复制，list拷贝
     var result = List<HotelListData>.from(originHotelList);
 
     var priceRange = keys.range;

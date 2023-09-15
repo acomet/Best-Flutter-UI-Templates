@@ -79,9 +79,10 @@ class HotelListView extends StatelessWidget {
                                             Text(
                                               hotelData.titleTxt,
                                               textAlign: TextAlign.left,
+                                              overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w600,
-                                                fontSize: 22,
+                                                fontSize: 20,
                                               ),
                                             ),
                                             Row(
@@ -97,19 +98,24 @@ class HotelListView extends StatelessWidget {
                                                 const SizedBox(
                                                   width: 4,
                                                 ),
+
+                                              ],
+                                            ),
+
+                                            Row(
+                                              children: [
                                                 Icon(
                                                   FontAwesomeIcons.locationDot,
                                                   size: 12,
                                                   color: HotelAppTheme.buildLightTheme().primaryColor,
                                                 ),
-                                                Expanded(
-                                                  child: Text(
-                                                    '${hotelData.dist.toStringAsFixed(1)} km to city',
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.grey.withOpacity(0.8)),
-                                                  ),
+                                                SizedBox(width: 5,),
+                                                Text(
+                                                  '${hotelData.dist.toStringAsFixed(1)} km to city',
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.grey.withOpacity(0.8)),
                                                 ),
                                               ],
                                             ),
@@ -147,7 +153,8 @@ class HotelListView extends StatelessWidget {
                                                   Text(
                                                     ' ${hotelData.reviews} Reviews',
                                                     style: TextStyle(
-                                                        fontSize: 14,
+                                                        fontSize: 12,
+                                                        overflow: TextOverflow.ellipsis,
                                                         color: Colors.grey.withOpacity(0.8)),
                                                   ),
                                                 ],

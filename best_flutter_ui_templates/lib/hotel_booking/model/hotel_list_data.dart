@@ -31,7 +31,7 @@ class HotelListData {
         dist: 5.0,
         reviews: 80,
         rating: 4.4,
-        perNight: 100,
+        perNight: 10000,
         like: false,
         accomodationType: "Apartment",
         popular: "Free Breakfast"),

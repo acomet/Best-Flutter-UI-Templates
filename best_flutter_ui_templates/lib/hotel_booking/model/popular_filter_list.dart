@@ -19,12 +19,12 @@ class PopularFilterListData {
     PopularFilterListData(
       1,
       titleTxt: 'Free Breakfast',
-      isSelected: false,
+      isSelected: true,
     ),
     PopularFilterListData(
       2,
       titleTxt: 'Free Parking',
-      isSelected: false,
+      isSelected: true,
     ),
     PopularFilterListData(
       3,
@@ -34,12 +34,12 @@ class PopularFilterListData {
     PopularFilterListData(
       4,
       titleTxt: 'Pet Friendly',
-      isSelected: false,
+      isSelected: true,
     ),
     PopularFilterListData(
       5,
       titleTxt: 'Free wifi',
-      isSelected: false,
+      isSelected: true,
     ),
   ];
 
