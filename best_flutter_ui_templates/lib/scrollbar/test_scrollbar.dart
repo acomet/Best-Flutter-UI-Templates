@@ -72,7 +72,7 @@ class NestedScrollViewState extends State<NestedScrollViewWidget> {
       expandedHeight: 500,
       elevation: 0,
       backgroundColor: headerWhite? Colors.white : Color(0xFFF4F5F7),
-      brightness: Brightness.light,
+      // brightness: Brightness.light,
       snap: false,
       leading: IconButton(
           icon: Image.network(backIcon, height: 22, width: 22,),
