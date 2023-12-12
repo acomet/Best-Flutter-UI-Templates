@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+///
+/// 和原生交互
+/// 
 class LearnChannelOne extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {

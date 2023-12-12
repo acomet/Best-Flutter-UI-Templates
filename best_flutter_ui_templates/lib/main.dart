@@ -2,10 +2,13 @@ import 'dart:io';
 
 // 注意：
 // 这里的意思是导入 foundation.dart 里面所有以及导出的文件，里面有constants.dart，constants.dart里有kIsWeb()方法
+import 'package:best_flutter_ui_templates/get_x/get_x_1.dart';
+import 'package:best_flutter_ui_templates/get_x/get_x_2.dart';
 import 'package:best_flutter_ui_templates/learn_channel/learn_channel_1.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'learn_provider/2_change_notifier_provider/provider_page_3.dart';
@@ -96,10 +99,19 @@ class MyApp extends StatelessWidget {
     //   ),
     // );
 
+    /// 和原生交互demo
+    // return MaterialApp(
+    //   debugShowCheckedModeBanner: true,
+    //   home: LearnChannelOne(),
+    // );
 
-    return MaterialApp(
+     return MaterialApp(
       debugShowCheckedModeBanner: true,
-      home: LearnChannelOne(),
+       home: GetMaterialApp(
+         title: "Get X Widget",
+         // home: GetXWidget(),
+         home: GetXController(),
+       ),
     );
   }
 
